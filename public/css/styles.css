@@ -1,0 +1,234 @@
+/* Main styles for Agent Dashboard */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: #333;
+}
+
+h1 {
+    color: #2563eb;
+    margin-bottom: 1.5rem;
+}
+
+/* Form Styles */
+.form-container {
+    background-color: #f9fafb;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="url"],
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+}
+
+button {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #1d4ed8;
+}
+
+.hint {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Dashboard Styles */
+.actions {
+    margin-bottom: 1rem;
+}
+
+.actions button {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-right: 0.5rem;
+}
+
+.actions button:hover {
+    background-color: #1d4ed8;
+}
+
+.loading {
+    display: none;
+    margin-left: 1rem;
+    font-style: italic;
+    color: #6b7280;
+}
+
+.spinner {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    animation: spin 1s linear infinite;
+    margin-right: 0.25rem;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+th {
+    background-color: #f9fafb;
+    cursor: pointer;
+    user-select: none;
+}
+
+th:hover {
+    background-color: #f3f4f6;
+}
+
+tr:hover {
+    background-color: #f9fafb;
+}
+
+.sort-header::after {
+    content: "⇕";
+    margin-left: 0.25rem;
+    font-size: 0.75rem;
+}
+
+.sort-asc::after {
+    content: "↑";
+}
+
+.sort-desc::after {
+    content: "↓";
+}
+
+.json-preview {
+    background-color: #f9fafb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-family: monospace;
+    white-space: pre-wrap;
+    overflow-x: auto;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Tab Navigation */
+.tab-container {
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 1rem;
+}
+
+.tab {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.tab.active {
+    border-bottom: 2px solid #2563eb;
+    color: #2563eb;
+    font-weight: 500;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Chart Controls */
+.chart-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    background-color: #f9fafb;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.chart-controls .form-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.chart-controls label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.chart-controls select {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+}
+
+.chart-container {
+    height: 400px;
+    position: relative;
+}
