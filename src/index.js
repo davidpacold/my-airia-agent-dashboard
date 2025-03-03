@@ -1,5 +1,5 @@
 /**
- * Airia Agent Dashboard - displays data in a sortable table
+ * Agent Dashboard - displays data in a sortable table
  *
  * - Run `npm run dev` in your terminal to start a development server
  * - Open a browser tab at http://localhost:8787/ to see your dashboard in action
@@ -34,15 +34,15 @@ export default {
 				
 				if (demoMode) {
 					// DEMO MODE: Use sample data
-					console.log(`Demo mode: Would have sent request to ${apiUrl} with API key ${apiKey}`);
+					console.log(`Demo mode: Using sample data instead of API call`);
 					
 					// Use sample data
 					data = {
-						"pipelineId": "a68499e8-3e97-4169-a247-28a59613a6d1",
+						"pipelineId": "123e4567-e89b-12d3-a456-426614174000",
 						"status": "completed",
-						"created": "2025-03-03T12:34:56Z",
-						"completed": "2025-03-03T12:35:23Z",
-						"result": "```json\n[\n    {\n        \"id\": \"21491\",\n        \"key\": \"VL-26\",\n        \"fields\": {\n            \"summary\": \"Healthcare Deck Revisions (Spencer)\",\n            \"assignee\": {\n                \"displayName\": \"Spencer Reagan\",\n                \"emailAddress\": \"spencerreagan@airia.com\"\n            },\n            \"status\": {\n                \"name\": \"In Progress\"\n            }\n        }\n    },\n    {\n        \"id\": \"21490\",\n        \"key\": \"VL-25\",\n        \"fields\": {\n            \"summary\": \"HIMMS Speech (Spencer)\",\n            \"assignee\": {\n                \"displayName\": \"Spencer Reagan\",\n                \"emailAddress\": \"spencerreagan@airia.com\"\n            },\n            \"status\": {\n                \"name\": \"Backlog\"\n            }\n        }\n    },\n    {\n        \"id\": \"21489\",\n        \"key\": \"VL-24\",\n        \"fields\": {\n            \"summary\": \"HTML Website for Embedded Chat (Olivia)/(Bill)\",\n            \"assignee\": {\n                \"displayName\": \"Olivia LaHair\",\n                \"emailAddress\": \"olivialahair@airia.com\"\n            },\n            \"status\": {\n                \"name\": \"Done\"\n            }\n        }\n    },\n    {\n        \"id\": \"21488\",\n        \"key\": \"VL-23\",\n        \"fields\": {\n            \"summary\": \"Top off HC Tenant Balance (Julia)\",\n            \"assignee\": {\n                \"displayName\": \"Julia Floreak\",\n                \"emailAddress\": \"juliafloreak@airia.com\"\n            },\n            \"status\": {\n                \"name\": \"Done\"\n            }\n        }\n    },\n    {\n        \"id\": \"21487\",\n        \"key\": \"VL-22\",\n        \"fields\": {\n            \"summary\": \"Competitive Analysis Spreadsheet (All)\",\n            \"assignee\": {\n                \"displayName\": \"Tom Cronin\",\n                \"emailAddress\": \"tomcronin@airia.com\"\n            },\n            \"status\": {\n                \"name\": \"Backlog\"\n            }\n        }\n    }\n]\n```",
+						"created": "2025-01-01T10:00:00Z",
+						"completed": "2025-01-01T10:01:30Z",
+						"result": "```json\n[\n    {\n        \"id\": \"10001\",\n        \"key\": \"DEMO-1\",\n        \"fields\": {\n            \"summary\": \"Update documentation for API v2\",\n            \"assignee\": {\n                \"displayName\": \"John Smith\",\n                \"emailAddress\": \"john.smith@example.com\"\n            },\n            \"status\": {\n                \"name\": \"In Progress\"\n            }\n        }\n    },\n    {\n        \"id\": \"10002\",\n        \"key\": \"DEMO-2\",\n        \"fields\": {\n            \"summary\": \"Prepare quarterly presentation\",\n            \"assignee\": {\n                \"displayName\": \"Jane Doe\",\n                \"emailAddress\": \"jane.doe@example.com\"\n            },\n            \"status\": {\n                \"name\": \"Backlog\"\n            }\n        }\n    },\n    {\n        \"id\": \"10003\",\n        \"key\": \"DEMO-3\",\n        \"fields\": {\n            \"summary\": \"Build landing page prototype\",\n            \"assignee\": {\n                \"displayName\": \"Alex Johnson\",\n                \"emailAddress\": \"alex.johnson@example.com\"\n            },\n            \"status\": {\n                \"name\": \"Done\"\n            }\n        }\n    },\n    {\n        \"id\": \"10004\",\n        \"key\": \"DEMO-4\",\n        \"fields\": {\n            \"summary\": \"Review vendor contracts\",\n            \"assignee\": {\n                \"displayName\": \"Sam Taylor\",\n                \"emailAddress\": \"sam.taylor@example.com\"\n            },\n            \"status\": {\n                \"name\": \"Done\"\n            }\n        }\n    },\n    {\n        \"id\": \"10005\",\n        \"key\": \"DEMO-5\",\n        \"fields\": {\n            \"summary\": \"Competitor analysis report\",\n            \"assignee\": {\n                \"displayName\": \"Morgan Lee\",\n                \"emailAddress\": \"morgan.lee@example.com\"\n            },\n            \"status\": {\n                \"name\": \"Backlog\"\n            }\n        }\n    }\n]\n```",
 						"report": null,
 						"isBackupPipeline": false
 					};
@@ -101,7 +101,7 @@ function generateConnectionForm() {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Airia Agent Dashboard - Connect</title>
+	<title>Agent Dashboard - Connect</title>
 	<style>
 		body {
 			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -174,7 +174,7 @@ function generateConnectionForm() {
 	</style>
 </head>
 <body>
-	<h1>Airia Agent Dashboard</h1>
+	<h1>Agent Dashboard</h1>
 	
 	<div class="form-container">
 		<form id="connection-form" action="/fetch-data" method="POST">
@@ -184,11 +184,10 @@ function generateConnectionForm() {
 					type="url" 
 					id="apiUrl" 
 					name="apiUrl" 
-					placeholder="https://api.airia.ai/v1/PipelineExecution/a68499e8-3e97-4169-a247-28a59613a6d1" 
+					placeholder="https://api.example.com/v1/data" 
 					required
-					value="https://api.airia.ai/v1/PipelineExecution/a68499e8-3e97-4169-a247-28a59613a6d1"
 				>
-				<div class="hint">The complete URL for the Airia API endpoint</div>
+				<div class="hint">The complete URL for the API endpoint</div>
 			</div>
 			
 			<div class="form-group">
@@ -197,14 +196,14 @@ function generateConnectionForm() {
 					type="text" 
 					id="apiKey" 
 					name="apiKey" 
-					placeholder="Your Airia API Key" 
+					placeholder="Your API Key" 
 					required
 				>
 				<div class="hint">Your X-API-KEY for authentication</div>
 			</div>
 			
 			<div class="form-group checkbox-group">
-				<input type="checkbox" id="demoMode" name="demoMode">
+				<input type="checkbox" id="demoMode" name="demoMode" checked>
 				<label for="demoMode">Use Demo Mode</label>
 				<div class="hint">When checked, will use sample data instead of making an actual API call</div>
 			</div>
@@ -410,7 +409,7 @@ function generateDashboard(data, formData) {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Airia Agent Dashboard</title>
+	<title>Agent Dashboard</title>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<style>
 		body {
@@ -551,7 +550,7 @@ function generateDashboard(data, formData) {
 	</style>
 </head>
 <body>
-	<h1>Airia Agent Dashboard</h1>
+	<h1>Agent Dashboard</h1>
 	
 	<div class="actions">
 		<button onclick="window.location.href='/'">Back to Connection Form</button>
@@ -934,7 +933,7 @@ function generateDashboard(data, formData) {
 			var dataBlob = new Blob([dataStr], {type: 'application/json'});
 			var url = URL.createObjectURL(dataBlob);
 			var link = document.createElement('a');
-			link.download = 'airia_data.json';
+			link.download = 'data.json';
 			link.href = url;
 			link.click();
 		}
