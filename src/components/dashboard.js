@@ -2,9 +2,34 @@
  * Generates the HTML for the dashboard
  * @param {Object} data - The data to display in the dashboard
  * @param {FormData} formData - The form data used to fetch the data
+ * @param {Object} processedData - The processed data ready for display with markdown info
+ * @param {string} dashboardId - The ID of the current dashboard
+ * @param {Array} allDashboards - All available dashboards
  * @returns {string} - HTML for the dashboard
  */
-export function generateDashboard(data, formData, processedData) {
+export function generateDashboard(data, formData, processedDataObj, dashboardId, allDashboards = []) {
+    // Extract processed data and markdown information
+    const processedData = processedDataObj.data || [];
+    const isMarkdownReport = processedDataObj.isMarkdownReport || false;
+    const markdownContent = processedDataObj.markdownContent || '';
+    
+    // If we have markdown, convert it to HTML
+    let markdownHtml = '';
+    if (isMarkdownReport && markdownContent) {
+        try {
+            // Use imported marked function directly
+            markdownHtml = marked.parse(markdownContent);
+        } catch (e) {
+            console.error("Error converting markdown to HTML:", e);
+            // Fallback to simple formatting if marked fails
+            markdownHtml = markdownContent
+                .replace(/###\s+(.*?)(\n|$)/g, '<h3>$1</h3>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '<br><br>')
+                .replace(/\n-\s+(.*?)(\n|$)/g, '<br>• $1');
+        }
+    }
+    
     // Generate table headers and rows HTML
     let headersHtml = '';
     let rowsHtml = '';
@@ -25,7 +50,7 @@ export function generateDashboard(data, formData, processedData) {
             }).join('');
             return `<tr>${cells}</tr>`;
         }).join('');
-    } else {
+    } else if (!isMarkdownReport) {
         rowsHtml = '<tr><td colspan="100">No data available</td></tr>';
     }
     
@@ -169,13 +194,100 @@ export function generateDashboard(data, formData, processedData) {
             height: 400px;
             position: relative;
         }
+        
+        /* Markdown Report Styles */
+        .markdown-report {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .markdown-report h3 {
+            color: #2563eb;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .markdown-report ul {
+            padding-left: 1.5rem;
+            list-style-type: disc;
+        }
+        
+        .markdown-report li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .markdown-report strong {
+            color: #4b5563;
+            font-weight: 600;
+        }
+        
+        .markdown-report p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Dashboard Tabs Styles */
+        .dashboard-tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 2px;
+        }
+        .dashboard-tab {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            margin-right: 4px;
+        }
+        .dashboard-tab.active {
+            border-bottom: 2px solid #2563eb;
+            color: #2563eb;
+            font-weight: 500;
+        }
+        .dashboard-tab:hover {
+            background-color: #f3f4f6;
+        }
+        .dashboard-tab.add-tab {
+            color: #6b7280;
+        }
+        .dashboard-tab svg {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
     <h1>Agent Dashboard</h1>
     
+    ${allDashboards && allDashboards.length > 1 ? `
+    <div class="dashboard-tabs">
+        ${allDashboards.map(dashboard => 
+            `<div class="dashboard-tab ${dashboard.id === dashboardId ? 'active' : ''}" 
+                  data-id="${dashboard.id}" 
+                  onclick="window.location.href='/dashboard/${dashboard.id}'">
+                ${dashboard.name}
+            </div>`
+        ).join('')}
+        <div class="dashboard-tab add-tab" onclick="window.location.href='/'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+            </svg>
+            New
+        </div>
+    </div>` : ''}
+    
     <div class="actions">
-        <button onclick="window.location.href='/'">Back to Connection Form</button>
+        <button onclick="window.location.href='/'">New Dashboard</button>
         <button onclick="refreshData()">
             <span id="refresh-text">Refresh Data</span>
             <span id="refresh-spinner" style="display: none;">
@@ -187,16 +299,18 @@ export function generateDashboard(data, formData, processedData) {
             </span>
         </button>
         <button onclick="downloadJson()">Download JSON</button>
+        <button onclick="deleteDashboard('${dashboardId}')" style="background-color: #ef4444;">Delete Dashboard</button>
     </div>
 
     <div class="tab-container">
-        <div class="tab active" data-tab="table">Table View</div>
+        <div class="tab ${!isMarkdownReport ? 'active' : ''}" data-tab="table">Table View</div>
         <div class="tab" data-tab="chart">Chart View</div>
+        ${isMarkdownReport ? `<div class="tab active" data-tab="report">Report View</div>` : ''}
         <div class="tab" data-tab="json">Raw JSON</div>
     </div>
 
     <div id="dashboard">
-        <div id="table-tab" class="tab-content active">
+        <div id="table-tab" class="tab-content ${!isMarkdownReport ? 'active' : ''}">
             <table id="data-table">
                 <thead>
                     <tr>${headersHtml}</tr>
@@ -204,6 +318,13 @@ export function generateDashboard(data, formData, processedData) {
                 <tbody>${rowsHtml}</tbody>
             </table>
         </div>
+        
+        ${isMarkdownReport ? `
+        <div id="report-tab" class="tab-content active">
+            <div class="markdown-report">
+                ${markdownHtml}
+            </div>
+        </div>` : ''}
         
         <div id="chart-tab" class="tab-content">
             <div class="chart-controls">
@@ -250,6 +371,7 @@ export function generateDashboard(data, formData, processedData) {
         // Store all required data
         const apiData = ${JSON.stringify(data)};
         const tableData = ${JSON.stringify(processedData)};
+        const dashboardId = "${dashboardId}";
         const savedFormData = {
             apiUrl: "${formData ? encodeURIComponent(formData.get("apiUrl") || "") : ""}",
             apiKey: "${formData ? encodeURIComponent(formData.get("apiKey") || "") : ""}",
@@ -264,7 +386,7 @@ export function generateDashboard(data, formData, processedData) {
         // Chart instance
         let chartInstance = null;
         
-        // Refresh data function
+        // Refresh data function for current dashboard
         function refreshData() {
             try {
                 // Show loading spinner
@@ -274,7 +396,7 @@ export function generateDashboard(data, formData, processedData) {
                 // Create a form element
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = '/fetch-data';
+                form.action = '/refresh-dashboard/' + dashboardId;
                 form.style.display = 'none';
                 
                 // Add required fields
@@ -322,6 +444,26 @@ export function generateDashboard(data, formData, processedData) {
             link.download = 'data.json';
             link.href = url;
             link.click();
+        }
+        
+        // Delete dashboard function
+        function deleteDashboard(id) {
+            if (confirm('Are you sure you want to delete this dashboard?')) {
+                fetch('/dashboard/' + id, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/';
+                    } else {
+                        alert('Failed to delete dashboard');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting dashboard:', error);
+                    alert('Error deleting dashboard: ' + error.message);
+                });
+            }
         }
         
         // Setup tab navigation
